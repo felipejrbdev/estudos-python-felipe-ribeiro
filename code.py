@@ -1,9 +1,26 @@
-def somar(n1, n2):
-    return n1 + n2
+import sqlite3
 
-n1 = int(input("Digite o primeiro numero: "))
-n2 = int(input("Digite o segundo numero: "))
+conexao = sqlite3.connect("banco.db")
+cursor = conexao.cursor()
 
-resultado = somar(n1, n2)
+cursor.execute("""CREATE TABLE IF NOT EXISTS contas_bancarias (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                titular TEXT NOT NULL,
+                saldo FLOAT NOT NULL,
+                cpf TEXT NOT NULL UNIQUE
+                )""")
 
-print(f"O resultado é: {resultado}")
+# cursor.execute("""INSERT INTO contas_bancarias
+#                 (titular, saldo, cpf) VALUES
+#                 ('Felipe', 3400, '52341245')""")
+
+cursor.execute("""SELECT titular, saldo FROM contas_bancarias""")
+contas = cursor.fetchall()
+print(contas)
+for conta in contas:
+    titular, saldo = conta
+    print(f"""Titular: {titular}
+Saldo: {saldo}""")
+    print("\n")
+
+conexao.commit()
